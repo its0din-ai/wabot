@@ -68,9 +68,7 @@ client.on('message', async message => {
                 }
 
                 if(msgx.indexOf('!kick') > -1){
-                    console.log(typeof(message.mentionedIds) + "\n" + message.mentionedIds)
-                    chat.send(typeof(message.mentionedIds) + "\n" + message.mentionedIds)
-
+                    await chat.removeParticipants(message.mentionedIds)
                 }
 
 
