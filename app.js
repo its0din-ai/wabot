@@ -18,7 +18,6 @@ client.on('qr', qr => {
 client.on('ready', () => {
     console.log('Client is ready!');
     console.log('For run this app in the background,\nTry to learn using tmux and start it in Tmux Session');
-
 });
 
 client.on('message', async message => {
@@ -32,24 +31,88 @@ client.on('message', async message => {
     let msgx = message.body
 
     // check if message from groupchat
-    if(chat.isGroup){
+    if(chat.isGroup)
+    {
         const authorId = message.author;
         for(let participant of chat.participants) {
             if(participant.id._serialized === authorId && participant.isAdmin) {
+                // Menu eksklusif admin ada disini
                 if(msgx === '!help'){
                     message.reply('Halo Admin, ini adalah menu Bot: \n!halo \n!tagsemua [pesan] \n!stickerize \n!tambahkeun [nomor1] [nomor2] ..');
                 }
+
+                if(msgx.indexOf('!tambahkeun') > -1){
+                    let tampungString = msgx.slice(12);
+                    var arrNomor = tampungString.split(" ")
+                    var nmr = []
+
+                    for(let xyz of arrNomor){
+                         if(await client.isRegisteredUser(xyz)){
+                             const kontaq = await client.getNumberId(xyz)
+                             const idNomor = await client.getContactById(kontaq._serialized)
+                             nmr.push(idNomor.id._serialized)
+                             console.log("[*] " + xyz + " Registered")
+                         } else{
+                             console.log("[!] " + xyz + " Not Registered!")
+                         }
+                    }
+                    await chat.addParticipants(nmr)
+
+                }
+
             } else if(participant.id._serialized === authorId && !participant.isAdmin){
                 if(msgx === '!help'){
-                    message.reply('Halo Member, ini adalah menu Bot: \n!halo \n!tagsemua [pesan] \n!stickerize');
+                    message.reply('Halo Member, ini adalah menu Bot: \n!halo \n!tagsemua [pesan]');
+                }
+
+
+
+                // Error Catcher
+                if(msgx === '!stickerize') {
+                    message.reply("Maaf, konversi ke Sticker hanya dapat dilakukan melalui Private Chat")
                 }
             }
         }
-    } else if(!chat.isGroup){
+
+        // Menu manajemen Group ada disini (Selain Admin)
+
+        if(msgx.indexOf('!tagsemua') > -1) {
+            let text = msgx.slice(10) + "\n";
+            let mentions = [];
+    
+            for(let participant of chat.participants) {
+                const contact = await client.getContactById(participant.id._serialized);
+                mentions.push(contact);
+                text += `@${participant.id.user} `;
+            }
+    
+            await chat.sendMessage(text, { mentions });
+        }
+
+    }
+    else if(!chat.isGroup)
+    {
+        // Menu yang hanya bisa diakses melalui Private Chat
         if(msgx === '!help'){
             message.reply('Halo User, ini adalah menu Bot: \n!halo \n!stickerize');
         }
+
+        if(msgx === '!stickerize') {
+            if(message.hasMedia) {
+                const sticker = await message.downloadMedia();
+                chat.sendMessage(sticker, { sendMediaAsSticker: true, stickerAuthor: 'encrypt0r-bot', stickerName: 'sticker'});
+            }
+        }
+
+
+
+        // Error Catcher
+        if(msgx.indexOf('!tagsemua') > -1) {
+            message.reply("Maaf, perintah ini hanya dapat digunakan di Group Chat")
+        }
     }
+
+    // Menu yang bisa diakses semua ada disini
 
     if(msgx === '!halo') {
         if(tanggal.getHours() < 12){
@@ -63,42 +126,18 @@ client.on('message', async message => {
         }
     }
 
-    if(msgx.indexOf('!tagsemua') > -1) {
-        let text = msgx.slice(10) + "\n";
-        let mentions = [];
 
-        for(let participant of chat.participants) {
-            const contact = await client.getContactById(participant.id._serialized);
-            mentions.push(contact);
-            text += `@${participant.id.user} `;
-        }
 
-        await chat.sendMessage(text, { mentions });
+
+
+
+
+
+    // Playground
+    if(msgx === '!getdata'){
+        console.log("\n" + message.mentionedIds)
     }
 
-    if(msgx.indexOf('!tambahkeun') > -1){
-        let tampungString = msgx.slice(12);
-        var arrNomor = tampungString.split(" ")
-        var nmr = []
-        for(let xyz of arrNomor){
-             if(await client.isRegisteredUser(xyz)){
-                 const kontaq = await client.getNumberId(xyz)
-                 const idNomor = await client.getContactById(kontaq._serialized)
-                 nmr.push(idNomor.id._serialized)
-                 console.log("[*] " + xyz + " Registered")
-             } else{
-                 console.log("[!] " + xyz + " Not Registered!")
-             }
-        }
-        await chat.addParticipants(nmr)
-    }
-
-    if(msgx === '!stickerize') {
-        if(message.hasMedia) {
-            const sticker = await message.downloadMedia();
-            chat.sendMessage(sticker, { sendMediaAsSticker: true, stickerAuthor: 'encrypt0r-bot', stickerName: 'sticker'});
-        }
-    }
 
 });
 
