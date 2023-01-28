@@ -37,20 +37,19 @@ client.on('message', async message => {
         for(let participant of chat.participants) {
             if(participant.id._serialized === authorId && participant.isAdmin) {
                 if(msgx === '!help'){
-                    message.reply('Halo Admin, ini adalah menu Admin');
+                    message.reply('Halo Admin, ini adalah menu Bot: \n!halo \n!tagsemua [pesan] \n!stickerize \n!tambahkeun [nomor1] [nomor2] ..');
                 }
             } else if(participant.id._serialized === authorId && !participant.isAdmin){
                 if(msgx === '!help'){
-                    message.reply('Halo Member, ini adalah menu Admin');
+                    message.reply('Halo Member, ini adalah menu Bot: \n!halo \n!tagsemua [pesan] \n!stickerize');
                 }
             }
         }
     } else if(!chat.isGroup){
         if(msgx === '!help'){
-            message.reply('Halo User, ini adalah menu Admin');
+            message.reply('Halo User, ini adalah menu Bot: \n!halo \n!stickerize');
         }
     }
-
 
     if(msgx === '!halo') {
         if(tanggal.getHours() < 12){
@@ -97,10 +96,7 @@ client.on('message', async message => {
     if(msgx === '!stickerize') {
         if(message.hasMedia) {
             const sticker = await message.downloadMedia();
-            // console.log(sticker)
-            // const file = new MessageMedia('image/webp', sticker.data, 'img.webp');
-            // client.sendImageAsSticker(message.from, file);
-            chat.sendMessage(sticker, { sendMediaAsSticker: true });
+            chat.sendMessage(sticker, { sendMediaAsSticker: true, stickerAuthor: 'encrypt0r-bot', stickerName: 'sticker'});
         }
     }
 
