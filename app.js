@@ -27,7 +27,7 @@ client.on('message', async message => {
 
     // MSG Logger, for incident handling
     console.log('MSG Received');
-    console.log("[*] " + message.from + " =[ " + message.timestamp + " ]==> " + message.body);
+    console.log("[*] " + message.from + " =[ " + jam + " ]==> " + message.body);
 
     let msgx = message.body
 
@@ -36,16 +36,19 @@ client.on('message', async message => {
         const authorId = message.author;
         for(let participant of chat.participants) {
             if(participant.id._serialized === authorId && participant.isAdmin) {
-                // Will be a Admin Menu Help
-                message.reply('Halo Admin');
+                if(msgx === '!help'){
+                    message.reply('Halo Admin, ini adalah menu Admin');
+                }
             } else if(participant.id._serialized === authorId && !participant.isAdmin){
-                // Will be a Member Menu Help
-                message.reply('Halo Member');
+                if(msgx === '!help'){
+                    message.reply('Halo Member, ini adalah menu Admin');
+                }
             }
         }
     } else if(!chat.isGroup){
-        // Will be a User Menu Help
-        message.reply('Halo User');
+        if(msgx === '!help'){
+            message.reply('Halo User, ini adalah menu Admin');
+        }
     }
 
 
@@ -70,7 +73,7 @@ client.on('message', async message => {
             mentions.push(contact);
             text += `@${participant.id.user} `;
         }
-        
+
         await chat.sendMessage(text, { mentions });
     }
 
