@@ -43,7 +43,7 @@ client.on('message', async message => {
 
                 if(msgx.indexOf('!tambahkeun') > -1){
                     let tampungString = msgx.slice(12);
-                    var arrNomor = tampungString.split(" ")
+                    var arrNomor = tampungString.split(",")
                     var nmr = []
                     var gagal = []
                     for(let xyz of arrNomor){
