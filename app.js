@@ -8,7 +8,7 @@ const client = new Client({
 // ================================================================================================================
 
 client.on('authenticated', (session) => {
-    console.log("AUTHENTICATED", session);
+    console.log("Authenticated Using local session");
 });
 
 client.on('qr', qr => {
@@ -17,15 +17,39 @@ client.on('qr', qr => {
 
 client.on('ready', () => {
     console.log('Client is ready!');
-    console.log('User CTRL+Z to suspend, then type bg \nto make this program runs in the background');
+    console.log('For run this app in the background,\nTry to learn using tmux and start it in Tmux Session');
 
 });
 
 client.on('message', async message => {
-    console.log('MSG');
+    const jam = new Date().getHours() + 7;
+    const chat = await message.getChat();
+
+    // MSG Logger, for incident handling
+    console.log('MSG Received');
+    console.log("[*] " + message.from + " =[ " + message.timestamp + " ]==> " + message.body);
+
     let msgx = message.body
-    if(message.body === '!hello') {
-        const jam = new Date().getHours() + 7;
+
+    // check if message from groupchat
+    if(chat.isGroup){
+        const authorId = message.author;
+        for(let participant of chat.participants) {
+            if(participant.id._serialized === authorId && participant.isAdmin) {
+                // Will be a Admin Menu Help
+                message.reply('Halo Admin');
+            } else if(participant.id._serialized === authorId && !participant.isAdmin){
+                // Will be a Member Menu Help
+                message.reply('Halo Member');
+            }
+        }
+    } else if(!chat.isGroup){
+        // Will be a User Menu Help
+        message.reply('Halo User');
+    }
+
+
+    if(msgx === '!halo') {
         if(jam < 12){
             message.reply('Hai Haloooo, Selamat Pagi. Kenalin aku Bot yang dikembangin sama encrypt0r dengan library wwebjs');
         } else if( jam < 16){
@@ -38,7 +62,6 @@ client.on('message', async message => {
     }
 
     if(msgx.indexOf('!tagsemua') > -1) {
-        const chat = await message.getChat();
         let text = msgx.slice(10) + "\n";
         let mentions = [];
 
@@ -47,16 +70,8 @@ client.on('message', async message => {
             mentions.push(contact);
             text += `@${participant.id.user} `;
         }
-
+        
         await chat.sendMessage(text, { mentions });
-    }
-
-    if(message.body === '!stickerize') {
-        if(message.hasMedia) {
-            const sticker = await message.downloadMedia();
-            const file = new MessageMedia('image/webp', sticker.data, 'img.webp');
-            client.sendImageAsSticker(message.from, file);
-        }
     }
 
     if(msgx.indexOf('!tambahkeun') > -1){
@@ -73,8 +88,15 @@ client.on('message', async message => {
                  console.log("[!] " + xyz + " Not Registered!")
              }
         }
-        const codes = await message.getChat()
-        await codes.addParticipants(nmr)
+        await chat.addParticipants(nmr)
+    }
+
+    if(msgx === '!stickerize') {
+        if(message.hasMedia) {
+            const sticker = await message.downloadMedia();
+            const file = new MessageMedia('image/webp', sticker.data, 'img.webp');
+            client.sendImageAsSticker(message.from, file);
+        }
     }
 
 });
