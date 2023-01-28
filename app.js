@@ -97,10 +97,10 @@ client.on('message', async message => {
     if(msgx === '!stickerize') {
         if(message.hasMedia) {
             const sticker = await message.downloadMedia();
-            console.log(sticker)
+            // console.log(sticker)
             // const file = new MessageMedia('image/webp', sticker.data, 'img.webp');
             // client.sendImageAsSticker(message.from, file);
-            // chat.sendMessage(file, { sendMediaAsSticker: true });
+            chat.sendMessage(sticker, { sendMediaAsSticker: true });
         }
     }
 
