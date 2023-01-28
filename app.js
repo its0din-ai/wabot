@@ -27,7 +27,7 @@ client.on('message', async message => {
 
     // MSG Logger, for incident handling
     console.log('MSG Received');
-    console.log("[*] " + message.from + " =[ " + tanggal + " ]==> " + message.body);
+    console.log("[*] " + message.from + " =[ " + tanggal.toLocaleString() + " ]==> " + message.body);
 
     let msgx = message.body
 
