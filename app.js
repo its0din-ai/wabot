@@ -146,9 +146,7 @@ client.on('message', async message => {
 
 
     // Playground
-    if(msgx.indexOf('!getdata') > -1){
-        console.log("\n" + message.mentionedIds)
-    }
+    
 
 
 });
