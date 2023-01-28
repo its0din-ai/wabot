@@ -57,7 +57,10 @@ client.on('message', async message => {
                              gagal.push(xyz)
                          }
                     }
-                    await chat.addParticipants(nmr)
+                    // handle if nmr is empty array
+                    if(nmr.length > 0){
+                        await chat.addParticipants(nmr)
+                    }
                     if(gagal.length > 0){
                         message.reply("Nomor yang tidak terdaftar di Whatsapp: " + gagal)
                     }
