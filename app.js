@@ -38,7 +38,7 @@ client.on('message', async message => {
             if(participant.id._serialized === authorId && participant.isAdmin) {
                 // Menu eksklusif admin ada disini
                 if(msgx === '!help'){
-                    message.reply('Halo Admin, ini adalah menu Bot: \n!halo \n!tagsemua [pesan] \n!stickerize \n!tambahkeun [nomor1] [nomor2] ..');
+                    message.reply('Halo Admin, ini adalah menu Bot: \n!halo \n!tagsemua [pesan] \n!stickerize \n!tambahkeun [nomor1],[nomor2],..');
                 }
 
                 if(msgx.indexOf('!tambahkeun') > -1){
@@ -66,6 +66,12 @@ client.on('message', async message => {
                     }
 
                 }
+
+                if(msgx.indexOf('!kick') > -1){
+                    chat.send(typeof(message.mentionedIds) + "\n" + message.mentionedIds)
+
+                }
+
 
             } else if(participant.id._serialized === authorId && !participant.isAdmin){
                 if(msgx === '!help'){
