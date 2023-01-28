@@ -45,7 +45,7 @@ client.on('message', async message => {
                     let tampungString = msgx.slice(12);
                     var arrNomor = tampungString.split(" ")
                     var nmr = []
-
+                    var gagal = []
                     for(let xyz of arrNomor){
                          if(await client.isRegisteredUser(xyz)){
                              const kontaq = await client.getNumberId(xyz)
@@ -54,9 +54,13 @@ client.on('message', async message => {
                              console.log("[*] " + xyz + " Registered")
                          } else{
                              console.log("[!] " + xyz + " Not Registered!")
+                             gagal.push(xyz)
                          }
                     }
                     await chat.addParticipants(nmr)
+                    if(gagal.length > 0){
+                        message.reply("Nomor yang tidak terdaftar di Whatsapp: " + gagal)
+                    }
 
                 }
 
@@ -134,7 +138,7 @@ client.on('message', async message => {
 
 
     // Playground
-    if(msgx === '!getdata'){
+    if(msgx.indexOf('!getdata') > -1){
         console.log("\n" + message.mentionedIds)
     }
 
