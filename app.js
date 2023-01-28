@@ -22,12 +22,12 @@ client.on('ready', () => {
 });
 
 client.on('message', async message => {
-    const jam = new Date().getHours() + 7;
+    const tanggal = new Date();
     const chat = await message.getChat();
 
     // MSG Logger, for incident handling
     console.log('MSG Received');
-    console.log("[*] " + message.from + " =[ " + jam + " ]==> " + message.body);
+    console.log("[*] " + message.from + " =[ " + tanggal + " ]==> " + message.body);
 
     let msgx = message.body
 
@@ -53,11 +53,11 @@ client.on('message', async message => {
 
 
     if(msgx === '!halo') {
-        if(jam < 12){
+        if(tanggal.getHours() < 12){
             message.reply('Hai Haloooo, Selamat Pagi. Kenalin aku Bot yang dikembangin sama encrypt0r dengan library wwebjs');
-        } else if( jam < 16){
+        } else if( tanggal.getHours() < 16){
             message.reply('Hai Haloooo, Selamat Siang. Kenalin aku Bot yang dikembangin sama encrypt0r dengan library wwebjs');
-        } else if(jam < 19){
+        } else if(tanggal.getHours() < 19){
             message.reply('Hai Haloooo, Selamat Sore. Kenalin aku Bot yang dikembangin sama encrypt0r dengan library wwebjs');
         } else {
             message.reply('Hai Haloooo, Selamat Malam. Kenalin aku Bot yang dikembangin sama encrypt0r dengan library wwebjs');
