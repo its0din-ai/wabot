@@ -23,9 +23,9 @@ client.on('ready', () => {
 client.on('message', async message => {
     const tanggal = new Date();
     const chat = await message.getChat();
+    const aboutTemplate = "encrypt0r-bot v.0.69-dev\nBot ini dikembangkan oleh encrypt0r (https://s.id/encrypt0r) dengan menggunakan library wwebjs (https://wwebjs.dev). Mohon maaf jika Bot belum bisa Uptime selama 24/7 karena masih dalam tahap pengembangan.\nTerimakasih sudah menggunakan Bot ini, jika menurut anda Bot ini bermanfaat, mohon pertimbangan untuk menSupport di https://saweria.co/encrypt0r";
 
     // MSG Logger, for incident handling
-    console.log('MSG Received');
     console.log("[*] " + message.from + " =[ " + tanggal.toLocaleString() + " ]==> " + message.body);
 
     let msgx = message.body
@@ -36,12 +36,13 @@ client.on('message', async message => {
         const authorId = message.author;
         for(let participant of chat.participants) {
             if(participant.id._serialized === authorId && participant.isAdmin) {
+
                 // Menu eksklusif admin ada disini
                 if(msgx === '!help'){
-                    message.reply('Halo Admin, ini adalah menu Bot: \n!halo \n!tagsemua [pesan] \n!stickerize \n!tambahkeun [nomor1],[nomor2],..');
+                    message.reply('Halo Admin, Terimakasih sudah menggunakan chatbot ini.\nBerikut ini adalah menu Bot yang dapat anda gunakan sebagai Admin Group:  \n!help \n!about \n!halo \n!tagsemua [pesan] \n!add [nomor1],[nomor2],.. \n!kick @member1 @member2 .. \n\nSilahkan ketik !help di Private Chat untuk melihat menu yang dapat digunakan oleh User');
                 }
 
-                if(msgx.indexOf('!tambahkeun') > -1){
+                if(msgx.indexOf('!add') > -1){
                     let tampungString = msgx.slice(12);
                     var arrNomor = tampungString.split(",")
                     var nmr = []
@@ -73,8 +74,10 @@ client.on('message', async message => {
 
 
             } else if(participant.id._serialized === authorId && !participant.isAdmin){
+                
+                // Menu yang hanya bisa diakses oleh Member
                 if(msgx === '!help'){
-                    message.reply('Halo Member, ini adalah menu Bot: \n!halo \n!tagsemua [pesan]');
+                    message.reply('Halo Member, Terimakasih sudah menggunakan chatbot ini.\nBerikut ini adalah menu Bot yang dapat anda gunakan sebagai Member Group:  \n!help \n!about \n!halo \n!tagsemua [pesan] \n\nSilahkan ketik !help di Private Chat untuk melihat menu yang dapat digunakan oleh User');
                 }
 
 
@@ -83,6 +86,13 @@ client.on('message', async message => {
                 if(msgx === '!stickerize') {
                     message.reply("Maaf, konversi ke Sticker hanya dapat dilakukan melalui Private Chat")
                 }
+                if(msgx.indexOf('!add') > -1){
+                    message.reply("Maaf, anda bukan Admin di Group ini")
+                }
+                if(msgx.indexOf('!kick') > -1){
+                    message.reply("Maaf, anda bukan Admin di Group ini")
+                }
+                
             }
         }
 
@@ -106,7 +116,7 @@ client.on('message', async message => {
     {
         // Menu yang hanya bisa diakses melalui Private Chat
         if(msgx === '!help'){
-            message.reply('Halo User, ini adalah menu Bot: \n!halo \n!stickerize');
+            message.reply('Halo User, Terimakasih sudah menggunakan chatbot ini.\nBerikut ini adalah menu Bot yang dapat anda gunakan didalam Private Chat: \n!help \n!about \n!halo \n!stickerize \n\nUntuk menggunakan menu Manajemen Groupchat, tambahkan bot ke dalam Group, dan jadikan sebagai Admin Group');
         }
 
         if(msgx === '!stickerize') {
@@ -122,20 +132,30 @@ client.on('message', async message => {
         if(msgx.indexOf('!tagsemua') > -1) {
             message.reply("Maaf, perintah ini hanya dapat digunakan di Group Chat")
         }
+        if(msgx.indexOf('!add') > -1){
+            message.reply("Maaf, perintah ini hanya dapat digunakan di Group Chat")
+        }
+        if(msgx.indexOf('!kick') > -1){
+            message.reply("Maaf, perintah ini hanya dapat digunakan di Group Chat")
+        }
     }
 
     // Menu yang bisa diakses semua ada disini
 
     if(msgx === '!halo') {
         if(tanggal.getHours() < 12){
-            message.reply('Hai Haloooo, Selamat Pagi. Kenalin aku Bot yang dikembangin sama encrypt0r dengan library wwebjs');
+            message.reply('Hai Haloooo, Selamat Pagi.\nSemoga diberikan kemudahan untuk memulai hari :3');
         } else if( tanggal.getHours() < 16){
-            message.reply('Hai Haloooo, Selamat Siang. Kenalin aku Bot yang dikembangin sama encrypt0r dengan library wwebjs');
+            message.reply('Hai Haloooo, Selamat Siang.\nJangan lupa makan siang ya :)');
         } else if(tanggal.getHours() < 19){
-            message.reply('Hai Haloooo, Selamat Sore. Kenalin aku Bot yang dikembangin sama encrypt0r dengan library wwebjs');
+            message.reply('Hai Haloooo, Selamat Sore.\nTetap Semangat kak!');
         } else {
-            message.reply('Hai Haloooo, Selamat Malam. Kenalin aku Bot yang dikembangin sama encrypt0r dengan library wwebjs');
+            message.reply('Hai Haloooo, Selamat Malam.\nAda cerita apa hari ini? Jangan lupa istirahat yaa');
         }
+    }
+
+    if(msgx === '!about') {
+        message.reply(aboutTemplate);
     }
 
 
